@@ -1,0 +1,26 @@
+.npmap .leaflet-popup-content {
+    font-size: 14px;
+    margin: 15px;
+    min-width: 250px !important;
+	max-height: 300px !important;
+}
+
+.openstatus {
+    color: green;
+    font-weight: bold;
+}
+
+.closedstatus {
+    color: red;
+    font-weight: bold;
+}
+
+.crowdedstatus {
+    color: orange;
+    font-weight: bold;
+}
+
+.lastupdated {
+    color:grey;
+    font-size:small;
+}
