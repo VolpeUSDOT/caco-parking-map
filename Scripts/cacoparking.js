@@ -1,3 +1,6 @@
+const fullThreshold = 0.15;
+const limitedThreshold = 0.40;
+
 function requestData() {
     // Dummy data for testing until the API is up
     var data = [
@@ -92,18 +95,18 @@ function requestData() {
 
 function showData(data) {
     data.forEach(function(element) {
-        var marker = L.marker([element.lattitude, element.longitude]).addTo(map);
+        /*var marker = L.marker([element.lattitude, element.longitude]).addTo(map);
         console.log("marker", marker);
         marker.bindPopup(createPopupContent(element));
+        var t = L.Tooltip();*/
+        createMarker(element);
     });
 }
 
-function createPopupContent(lot) {
+function createMarker(lot) {
 
-    var lotStatus, lotCrowded, lastUpdated;
-
-    var lotFull = lot.capacity * 0.15;
-    var lotBusy = lot.capacity * 0.45;
+    var lotStatus, lotCrowded, lastUpdated, popupContent;
+    var markerColor = "#000000";
 
     if (lot.status == "Closed") {
         lotStatus = "<p class='closedstatus'>Closed</p>";
@@ -112,16 +115,55 @@ function createPopupContent(lot) {
     } else {
         lotStatus = "<p class='openstatus'>Open</p>";
         lotCrowded = "<p>Available Space: ";
-        if (lot.freeSpace <= lotFull) {
+        if (lotIsFull(lot)) {
             lotCrowded += "<span class='closedstatus'>None</span></p>";
+            markerColor = "#e60000";
 
-        } else if (lot.freeSpace <= lotBusy) {
+        } else if (lotIsLimited(lot)) {
             lotCrowded += "<span class='crowdedstatus'>Limited</span></p>";
+            markerColor = "#cc6600";
         } else {
             lotCrowded += "<span class='openstatus'>Yes</span></p>";
+            markerColor = "#009933";
         }
         lastUpdated = "<p class='lastupdated'>Last updated: " + moment(lot.freeSpaceTimeStamp, moment.ISO_8601).format("MMM D, h:m") + "</p>";
     }
 
-    return "<h1>" + lot.name + "</h1>" + lotStatus + lotCrowded + lastUpdated;
+    popupContent = "<h1>" + lot.name + "</h1>" + lotStatus + lotCrowded + lastUpdated;
+
+    var geojson = {
+        "type": "FeatureCollection",
+        "features": [{
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [lot.longitude, lot.lattitude]
+            },
+            "properties": {}
+        }]
+    };
+    var style = {
+        point: {
+            'marker-color': markerColor,
+            'marker-size': 'large',
+            'marker-library': 'npmapsymbollibrary',
+            'marker-symbol': 'beach-access-white'
+        }
+    };
+
+    var marker = L.npmap.layer.geojson({
+        data: geojson,
+        styles: style,
+        popup: {
+            description: popupContent
+        }
+    }).addTo(map);
+}
+
+function  lotIsFull(lot) {
+    return lot.freeSpace <= lot.capacity * fullThreshold;
+}
+
+function lotIsLimited(lot) {
+    return lot.freeSpace <= lot.capacity * limitedThreshold;
 }

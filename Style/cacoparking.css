@@ -24,3 +24,11 @@
     color:grey;
     font-size:small;
 }
+
+.leaflet-popup-content-wrapper {
+ border-radius: 12px !important;
+}
+
+.leaflet-container h1 {
+    font-size: 18px !important;
+}
