@@ -1,7 +1,14 @@
 const fullThreshold = 0.15;
 const limitedThreshold = 0.40;
+const apiUrl = "Insert URL Here";
 
 function requestData() {
+
+    /*var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "Your Rest URL Here", false);
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.send();
+    var response = JSON.parse(xhttp.responseText);*/
     // Dummy data for testing until the API is up
     var data = [
         {
@@ -95,10 +102,6 @@ function requestData() {
 
 function showData(data) {
     data.forEach(function(element) {
-        /*var marker = L.marker([element.lattitude, element.longitude]).addTo(map);
-        console.log("marker", marker);
-        marker.bindPopup(createPopupContent(element));
-        var t = L.Tooltip();*/
         createMarker(element);
     });
 }
@@ -106,7 +109,7 @@ function showData(data) {
 function createMarker(lot) {
 
     var lotStatus, lotCrowded, lastUpdated, popupContent;
-    var markerColor = "#000000";
+    var markerColor = "#A9A9A9";
 
     if (lot.status == "Closed") {
         lotStatus = "<p class='closedstatus'>Closed</p>";
