@@ -1,0 +1,51 @@
+.yes {
+    color:green;
+    font-weight: bold;
+}
+
+.limited {
+    color: orange;
+    font-weight: bold;
+}
+
+.no {
+    color: red;
+    font-weight: bold;
+}
+
+.closed {
+    color: gray;
+    font-weight: bold;
+}
+
+.nofee {
+    color:black;
+    font-weight: bold;
+}
+
+.columnheader {
+    font-weight: bold;
+    font-size: 18px;
+    padding: 5px;
+}
+
+.npslogo {
+    height: 35px;
+    width: 30px;
+    margin: 5px;
+}
+
+.npsheader {
+    background-color: black !important;
+    color: white !important;
+}
+
+.headertextlarge {
+    font-size: 20px;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.headertext {
+    vertical-align: middle;
+}

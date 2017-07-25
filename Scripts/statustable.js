@@ -1,15 +1,34 @@
-const fullThreshold = 0.15;
-const limitedThreshold = 0.40;
-const apiUrl = "Insert URL Here";
+var refreshInterval;
+const refreshTimeMillis = 300000;
 
-function requestData() {
+function initializeTable() {
+    var data = fetchData();
+    var panelStr = "<div class='panel panel-default'><div class='panel-heading npsheader' style='font-weight:bold;'>";
+    panelStr += "<img class='npslogo' src='Images/AH_large_flat_4C.gif'/><span class='headertextlarge'>National Park Service</span>";
+    panelStr += "<span class='headertext'>Cape Cod National Seashore</span></div>";
+    panelStr += "<table class='table'><tr class='columnheader'><td>Park Name</td><td>Lot Status</td></tr>";
+    data.forEach(function (lot) {
+        panelStr += "<tr><td>" + lot.name + "</td>";
+        panelStr += "<td><span id='" + lot.id + "status' class='" + getClassName(lot) + "'>" + lot.status + "</span></td></tr>";
+    });
+    panelStr += "</table></div>";
+    $("#StatusTable").append(panelStr);
+    refreshInterval = setInterval(updateTable, refreshTimeMillis);
+}
 
-    /*var xhttp = new XMLHttpRequest();
-    xhttp.open("POST", "Your Rest URL Here", false);
-    xhttp.setRequestHeader("Content-type", "application/json");
-    xhttp.send();
-    var response = JSON.parse(xhttp.responseText);*/
-    // Dummy data for testing until the API is up
+function updateTable() {
+    console.log("Update called at " + Date.now().toString());
+    var data = fetchData();
+    data.forEach(function (lot) {
+        var statusSpan = $("#" + lot.id + "status");
+        statusSpan.text(lot.status);
+        statusSpan.attr('class', getClassName(lot));
+    });
+}
+
+
+function fetchData() {
+    // We use dummy data for now
     var data = [
         {
             "id": 19,
@@ -62,7 +81,7 @@ function requestData() {
             "longitude": -70.082019,
             "capacity": 285,
             "note": "As of June 19, HEADMEADOW fee booth was still closed.",
-            "status": "Closed",
+            "status": "No Fee",
             "statusTimeStamp": "2017-06-26T13:26:58.545",
             "freeSpace": 0,
             "freeSpaceTimeStamp": "2017-06-26T13:26:58.545"
@@ -96,77 +115,18 @@ function requestData() {
             "freeSpaceTimeStamp": "2017-06-26T13:26:58.5453916"
         }
     ];
-
-    showData(data);
-};
-
-function showData(data) {
-    data.forEach(function (element) {
-        createMarker(element);
-    });
+    return data;
 }
 
-function createMarker(lot) {
-
-    var lotStatus, lotCrowded, lastUpdated, popupContent;
-    var markerColor = "#A9A9A9";
-
-    if (lot.status == "Closed") {
-        lotStatus = "<p class='closedstatus'>Closed</p>";
-        lotCrowded = "";
-        lastUpdated = "<p class='lastupdated'>Last updated: " + moment(lot.statusTimeStamp, moment.ISO_8601).format("MMM D, h:m") + "</p>";
-    } else {
-        lotStatus = "<p class='openstatus'>Open</p>";
-        lotCrowded = "<p>Available Space: ";
-        if (lotIsFull(lot)) {
-            lotCrowded += "<span class='closedstatus'>None</span></p>";
-            markerColor = "#e60000";
-
-        } else if (lotIsLimited(lot)) {
-            lotCrowded += "<span class='crowdedstatus'>Limited</span></p>";
-            markerColor = "#cc6600";
-        } else {
-            lotCrowded += "<span class='openstatus'>Yes</span></p>";
-            markerColor = "#009933";
-        }
-        lastUpdated = "<p class='lastupdated'>Last updated: " + moment(lot.freeSpaceTimeStamp, moment.ISO_8601).format("MMM D, h:m") + "</p>";
+function getClassName(lot) {
+    switch (lot.status) {
+        case "Closed":
+            return "closed";
+        case "No Fee":
+            return "nofee";
+        default:
+            // We don't have the final JSON structure yet
+            // TODO update this to change class depending on parking availability
+            return "yes";
     }
-
-    popupContent = "<h1>" + lot.name + "</h1>" + lotStatus + lotCrowded + lastUpdated;
-
-    var geojson = {
-        "type": "FeatureCollection",
-        "features": [{
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": [lot.longitude, lot.lattitude]
-            },
-            "properties": {}
-        }]
-    };
-    var style = {
-        point: {
-            'marker-color': markerColor,
-            'marker-size': 'large',
-            'marker-library': 'npmapsymbollibrary',
-            'marker-symbol': 'beach-access-white'
-        }
-    };
-
-    var marker = L.npmap.layer.geojson({
-        data: geojson,
-        styles: style,
-        popup: {
-            description: popupContent
-        }
-    }).addTo(map);
-}
-
-function lotIsFull(lot) {
-    return lot.freeSpace <= lot.capacity * fullThreshold;
-}
-
-function lotIsLimited(lot) {
-    return lot.freeSpace <= lot.capacity * limitedThreshold;
 }
