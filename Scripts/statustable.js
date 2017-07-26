@@ -6,10 +6,12 @@ function initializeTable() {
     var panelStr = "<div class='panel panel-default'><div class='panel-heading npsheader' style='font-weight:bold;'>";
     panelStr += "<img class='npslogo' src='Images/AH_large_flat_4C.gif'/><span class='headertextlarge'>National Park Service</span>";
     panelStr += "<span class='headertext'>Cape Cod National Seashore</span></div>";
-    panelStr += "<table class='table'><tr class='columnheader'><td>Park Name</td><td>Lot Status</td></tr>";
+    panelStr += "<table class='table'><tr class='columnheader'><td>Park Name</td><td>Lot Status</td><td>Space Available</td></tr>";
     data.forEach(function (lot) {
         panelStr += "<tr><td>" + lot.name + "</td>";
-        panelStr += "<td><span id='" + lot.id + "status' class='" + getClassName(lot) + "'>" + lot.status + "</span></td></tr>";
+        panelStr += "<td><span id='" + lot.id + "status' class='" + getClassName(lot) + "'>" + lot.status + "</span></td>";
+        // TODO use actual data
+        panelStr += "<td><span id='" + lot.id + "space' class='" + "yes" + "'>" + "Yes" + "</span></td></tr>";
     });
     panelStr += "</table></div>";
     $("#StatusTable").append(panelStr);
@@ -23,6 +25,8 @@ function updateTable() {
         var statusSpan = $("#" + lot.id + "status");
         statusSpan.text(lot.status);
         statusSpan.attr('class', getClassName(lot));
+        var spaceSpan = $("#" + lot.id + "space");
+        // TODO update spaceSpan
     });
 }
 
