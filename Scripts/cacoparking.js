@@ -3,13 +3,11 @@ const limitedThreshold = 0.40;
 const apiUrl = "Insert URL Here";
 
 function requestData() {
+    showData(data);
+};
 
-    /*var xhttp = new XMLHttpRequest();
-    xhttp.open("POST", "Your Rest URL Here", false);
-    xhttp.setRequestHeader("Content-type", "application/json");
-    xhttp.send();
-    var response = JSON.parse(xhttp.responseText);*/
-    // Dummy data for testing until the API is up
+function fetchData(successFun, errorFun) {
+    // We use dummy data for now
     var data = [
         {
             "id": 19,
@@ -62,7 +60,7 @@ function requestData() {
             "longitude": -70.082019,
             "capacity": 285,
             "note": "As of June 19, HEADMEADOW fee booth was still closed.",
-            "status": "Closed",
+            "status": "No Fee",
             "statusTimeStamp": "2017-06-26T13:26:58.545",
             "freeSpace": 0,
             "freeSpaceTimeStamp": "2017-06-26T13:26:58.545"
@@ -96,9 +94,13 @@ function requestData() {
             "freeSpaceTimeStamp": "2017-06-26T13:26:58.5453916"
         }
     ];
-
-    showData(data);
-};
+    successFun(data);
+    /*$.ajax({
+        url : dataUrl,
+        success: successFun,
+        error: errorFun
+    });*/
+}
 
 function showData(data) {
     data.forEach(function (element) {
@@ -116,7 +118,11 @@ function createMarker(lot) {
         lotCrowded = "";
         lastUpdated = "<p class='lastupdated'>Last updated: " + moment(lot.statusTimeStamp, moment.ISO_8601).format("MMM D, h:m") + "</p>";
     } else {
-        lotStatus = "<p class='openstatus'>Open</p>";
+        if (lot.status == "No Fee") {
+            lotStatus = "<p>" + lot.status + "</p>";
+        } else {
+            lotStatus = "<p class='openstatus'>" + lot.status + "</p>";
+        }
         lotCrowded = "<p>Available Space: ";
         if (lotIsFull(lot)) {
             lotCrowded += "<span class='closedstatus'>None</span></p>";

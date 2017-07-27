@@ -32,7 +32,7 @@
 
   <script type="text/javascript">
     var map = L.npmap.map({ div: 'map', fullscreenControl: false }).setView([41.904432, -69.979073], 11);
-    requestData();
+    fetchData(showData, function() {console.log("Failed")});
   </script>
 
 </body>

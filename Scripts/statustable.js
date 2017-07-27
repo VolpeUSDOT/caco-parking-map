@@ -1,8 +1,9 @@
+const apiUrl = "tobedetermined";
+
 var refreshInterval;
 const refreshTimeMillis = 300000;
 
-function initializeTable() {
-    var data = fetchData();
+function initializeTable(data) {
     var panelStr = "<div class='panel panel-default'><div class='panel-heading npsheader' style='font-weight:bold;'>";
     panelStr += "<img class='npslogo' src='Images/AH_large_flat_4C.gif'/><span class='headertextlarge'>National Park Service</span>";
     panelStr += "<span class='headertext'>Cape Cod National Seashore</span></div>";
@@ -15,12 +16,15 @@ function initializeTable() {
     });
     panelStr += "</table></div>";
     $("#StatusTable").append(panelStr);
-    refreshInterval = setInterval(updateTable, refreshTimeMillis);
+    refreshInterval = setInterval(refreshData, refreshTimeMillis);
 }
 
-function updateTable() {
+function refreshData() {
     console.log("Update called at " + Date.now().toString());
-    var data = fetchData();
+    fetchData(updateTable, function () { console.log("Fetch data failed") });
+}
+
+function updateTable(data) {
     data.forEach(function (lot) {
         var statusSpan = $("#" + lot.id + "status");
         statusSpan.text(lot.status);
@@ -30,8 +34,7 @@ function updateTable() {
     });
 }
 
-
-function fetchData() {
+function fetchData(successFun, errorFun) {
     // We use dummy data for now
     var data = [
         {
@@ -119,7 +122,12 @@ function fetchData() {
             "freeSpaceTimeStamp": "2017-06-26T13:26:58.5453916"
         }
     ];
-    return data;
+    successFun(data);
+    /*$.ajax({
+        url : dataUrl,
+        success: successFun,
+        error: errorFun
+    });*/
 }
 
 function getClassName(lot) {

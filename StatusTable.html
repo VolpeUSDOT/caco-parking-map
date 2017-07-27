@@ -26,7 +26,7 @@
     <div id="StatusTable"></div>
 
     <script type="text/javascript">
-        initializeTable();
+        fetchData(initializeTable, function () { console.log("Unable to get data") });
     </script>
 
 </body>
