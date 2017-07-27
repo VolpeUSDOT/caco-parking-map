@@ -60,7 +60,7 @@ function fetchData(successFun, errorFun) {
             "longitude": -70.082019,
             "capacity": 285,
             "note": "As of June 19, HEADMEADOW fee booth was still closed.",
-            "status": "No Fee",
+            "status": "Closed",
             "statusTimeStamp": "2017-06-26T13:26:58.545",
             "freeSpace": 0,
             "freeSpaceTimeStamp": "2017-06-26T13:26:58.545"
