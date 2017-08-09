@@ -4,15 +4,16 @@ var refreshInterval;
 const refreshTimeMillis = 300000;
 
 function initializeTable(data) {
+    data.sort(function(a, b) {
+        return a.name > b.name;
+    });
     var panelStr = "<div class='panel panel-default'><div class='panel-heading npsheader' style='font-weight:bold;'>";
     panelStr += "<img class='npslogo' src='Images/AH_large_flat_4C.gif'/><span class='headertextlarge'>National Park Service</span>";
     panelStr += "<span class='headertext'>Cape Cod National Seashore</span></div>";
-    panelStr += "<table class='table'><tr class='columnheader'><td>Park Name</td><td>Lot Status</td><td>Space Available</td></tr>";
+    panelStr += "<table class='table'><tr class='columnheader'><td>Park Name</td><td>Lot Status</td></tr>";
     data.forEach(function (lot) {
         panelStr += "<tr><td>" + lot.name + "</td>";
-        panelStr += "<td><span id='" + lot.id + "status' class='" + getClassName(lot) + "'>" + lot.status + "</span></td>";
-        // TODO use actual data
-        panelStr += "<td><span id='" + lot.id + "space' class='" + "yes" + "'>" + "Yes" + "</span></td></tr>";
+        panelStr += "<td><span id='" + lot.id + "status' class='" + getClassName(lot) + "'>" + lot.freeSpaceStatus + "</span></td>";
     });
     panelStr += "</table></div>";
     $("#StatusTable").append(panelStr);
@@ -27,11 +28,18 @@ function refreshData() {
 function updateTable(data) {
     data.forEach(function (lot) {
         var statusSpan = $("#" + lot.id + "status");
-        statusSpan.text(lot.status);
+        statusSpan.text(lot.freeSpaceStatus);
         statusSpan.attr('class', getClassName(lot));
-        var spaceSpan = $("#" + lot.id + "space");
-        // TODO update spaceSpan
     });
+}
+
+function getStatusText(lot) {
+    if (lot.status == "Closed")
+        return lot.status;
+    else {
+        // TODO change based off of final JSON
+        return "Yes";
+    }
 }
 
 function fetchData(successFun, errorFun) {
@@ -45,25 +53,27 @@ function fetchData(successFun, errorFun) {
             "lattitude": 41.858862,
             "longitude": -69.951859,
             "capacity": 167,
-            "note": "",
+            "note": null,
             "status": "Open",
-            "statusTimeStamp": "2017-06-26T13:26:58.543886",
-            "freeSpace": 0,
-            "freeSpaceTimeStamp": "2017-06-26T13:26:58.5453916"
+            "statusTimeStamp": "2017-06-26T13:26:58.543",
+            "freeSpace": 10,
+            "freeSpaceTimeStamp": "2017-06-26T13:26:58.545",
+            "freeSpaceStatus": "Open"
         },
         {
             "id": 20,
             "parkAbbrevId": "CACO",
             "abbrevId": "LITTLECREEK",
-            "name": "Little Creek Parking (for Coast Guard Beach)",
+            "name": "Coast Guard - Satellite Parking",
             "lattitude": 41.846383,
             "longitude": -69.959873,
             "capacity": 422,
             "note": null,
-            "status": "Open",
+            "status": "Closed",
             "statusTimeStamp": "2017-06-26T13:26:58.545",
-            "freeSpace": 150,
-            "freeSpaceTimeStamp": "2017-06-26T13:26:58.545"
+            "freeSpace": 0,
+            "freeSpaceTimeStamp": "2017-06-26T13:26:58.545",
+            "freeSpaceStatus": "Closed"
         },
         {
             "id": 21,
@@ -73,11 +83,12 @@ function fetchData(successFun, errorFun) {
             "lattitude": 41.891549,
             "longitude": -69.963428,
             "capacity": 530,
-            "note": "",
+            "note": null,
             "status": "Open",
-            "statusTimeStamp": "2017-06-26T13:26:58.5453916",
-            "freeSpace": 500,
-            "freeSpaceTimeStamp": "2017-06-26T13:26:58.5453916"
+            "statusTimeStamp": "2017-06-26T13:26:58.545",
+            "freeSpace": 0,
+            "freeSpaceTimeStamp": "2017-06-26T13:26:58.545",
+            "freeSpaceStatus": "Full"
         },
         {
             "id": 22,
@@ -88,10 +99,11 @@ function fetchData(successFun, errorFun) {
             "longitude": -70.082019,
             "capacity": 285,
             "note": "As of June 19, HEADMEADOW fee booth was still closed.",
-            "status": "No Fee",
+            "status": "Open",
             "statusTimeStamp": "2017-06-26T13:26:58.545",
             "freeSpace": 0,
-            "freeSpaceTimeStamp": "2017-06-26T13:26:58.545"
+            "freeSpaceTimeStamp": "2017-06-26T13:26:58.545",
+            "freeSpaceStatus": "Limited"
         },
         {
             "id": 23,
@@ -101,11 +113,12 @@ function fetchData(successFun, errorFun) {
             "lattitude": 42.079271,
             "longitude": -70.218091,
             "capacity": 292,
-            "note": "",
-            "status": "Closed",
-            "statusTimeStamp": "2017-06-26T13:26:58.5453916",
+            "note": null,
+            "status": "Open",
+            "statusTimeStamp": "2017-06-26T13:26:58.545",
             "freeSpace": 0,
-            "freeSpaceTimeStamp": "2017-06-26T13:26:58.5453916"
+            "freeSpaceTimeStamp": "2017-06-26T13:26:58.545",
+            "freeSpaceStatus": "Open"
         },
         {
             "id": 24,
@@ -115,11 +128,27 @@ function fetchData(successFun, errorFun) {
             "lattitude": 42.044123,
             "longitude": -70.216109,
             "capacity": 602,
-            "note": "",
-            "status": "Closed",
-            "statusTimeStamp": "2017-06-26T13:26:58.5453916",
+            "note": null,
+            "status": "Open",
+            "statusTimeStamp": "2017-06-26T13:26:58.545",
             "freeSpace": 0,
-            "freeSpaceTimeStamp": "2017-06-26T13:26:58.5453916"
+            "freeSpaceTimeStamp": "2017-06-26T13:26:58.545",
+            "freeSpaceStatus": "Full"
+        },
+        {
+            "id": 26,
+            "parkAbbrevId": "CACO",
+            "abbrevId": "COASTGUARD",
+            "name": "Coast Guard",
+            "lattitude": 2.0,
+            "longitude": 2.0,
+            "capacity": 400,
+            "note": null,
+            "status": "Open",
+            "statusTimeStamp": "2017-06-26T10:00:00",
+            "freeSpace": 20,
+            "freeSpaceTimeStamp": "2017-06-26T00:00:00",
+            "freeSpaceStatus": "Limited"
         }
     ];
     successFun(data);
@@ -131,14 +160,15 @@ function fetchData(successFun, errorFun) {
 }
 
 function getClassName(lot) {
-    switch (lot.status) {
-        case "Closed":
-            return "closed";
-        case "No Fee":
-            return "nofee";
-        default:
-            // We don't have the final JSON structure yet
-            // TODO update this to change class depending on parking availability
+    switch (lot.freeSpaceStatus) {
+        case "Open":
             return "yes";
+        case "Limited":
+            return "limited";
+        case "Full":
+            return "no";
+        case "Closed":          
+        default:
+            return "closed";
     }
 }
