@@ -49,3 +49,10 @@
 .headertext {
     vertical-align: middle;
 }
+
+.mainpanel {
+    width:95%;
+    margin:10px;
+    margin-left:auto;
+    margin-right:auto;
+}

@@ -33,15 +33,6 @@ function updateTable(data) {
     });
 }
 
-function getStatusText(lot) {
-    if (lot.status == "Closed")
-        return lot.status;
-    else {
-        // TODO change based off of final JSON
-        return "Yes";
-    }
-}
-
 function fetchData(successFun, errorFun) {
     // We use dummy data for now
     var data = [
