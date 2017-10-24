@@ -1,4 +1,4 @@
-const apiUrl = "http://52.204.93.216/api/distributor/caco";
+const apiUrl = "https://chc78z04rj.execute-api.us-east-1.amazonaws.com/beta/%7Bcaco+%7D";
 
 var refreshInterval;
 const refreshTimeMillis = 300000;
