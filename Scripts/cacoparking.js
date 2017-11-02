@@ -68,14 +68,6 @@ function createMarker(lot) {
     }).addTo(map);
 }
 
-function lotIsFull(lot) {
-    return lot.freeSpace <= lot.capacity * fullThreshold;
-}
-
-function lotIsLimited(lot) {
-    return lot.freeSpace <= lot.capacity * limitedThreshold;
-}
-
 function fetchData(successFun, errorFun) {
     $.ajax({
         url : apiUrl,
