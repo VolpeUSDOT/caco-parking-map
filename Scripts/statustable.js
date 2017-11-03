@@ -3,6 +3,14 @@ const apiUrl = "https://chc78z04rj.execute-api.us-east-1.amazonaws.com/beta/%7Bc
 var refreshInterval;
 const refreshTimeMillis = 300000;
 
+function fetchData(successFun, errorFun) {
+    $.ajax({
+        url : apiUrl,
+        success: successFun,
+        error: errorFun
+    });
+}
+
 function initializeTable(data) {
     data.sort(function(a, b) {
         return a.name > b.name;
@@ -17,14 +25,15 @@ function initializeTable(data) {
     });
     panelStr += "</table></div>";
     $("#StatusTable").append(panelStr);
+    // Reload our data at the specified frequency
     refreshInterval = setInterval(refreshData, refreshTimeMillis);
 }
 
 function refreshData() {
-    console.log("Update called at " + Date.now().toString());
     fetchData(updateTable, function () { console.log("Fetch data failed") });
 }
 
+// Update lot statuses
 function updateTable(data) {
     data.forEach(function (lot) {
         var statusSpan = $("#" + lot.id + "status");
@@ -33,14 +42,7 @@ function updateTable(data) {
     });
 }
 
-function fetchData(successFun, errorFun) {
-    $.ajax({
-        url : apiUrl,
-        success: successFun,
-        error: errorFun
-    });
-}
-
+// Determine styling for lot status
 function getClassName(lot) {
     switch (lot.freeSpaceStatus) {
         case "Open":

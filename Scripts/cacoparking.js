@@ -1,21 +1,29 @@
-const fullThreshold = 0.15;
-const limitedThreshold = 0.40;
 const apiUrl = "https://chc78z04rj.execute-api.us-east-1.amazonaws.com/beta/%7Bcaco+%7D";
 
+
+function fetchData(successFun, errorFun) {
+    $.ajax({
+        url: apiUrl,
+        success: successFun,
+        error: errorFun
+    });
+}
+
+// Success function for fetchData
 function showData(data) {
     data.forEach(function (element) {
         createMarker(element);
     });
 }
 
+// Add a marker to the map
 function createMarker(lot) {
-
     var lotCrowded, lastUpdated, popupContent;
     var markerColor = "#A9A9A9";
     lotCrowded = "<p>Parking Available: ";
     switch (lot.freeSpaceStatus) {
         case "Closed":
-            lotCrowded = "<span class='closedstatus'>Lot Closed</span></p>";
+            lotCrowded += "<span class='closedstatus'>Lot Closed</span></p>";
             break;
         case "Open":
             lotCrowded += "<span class='openstatus'>Yes</span></p>";
@@ -38,7 +46,8 @@ function createMarker(lot) {
     lastUpdated = "<p class='lastupdated'>Last updated: " + moment(lot.freeSpaceTimeStamp, moment.ISO_8601).format("MMM D, h:m") + "</p>";
 
     popupContent = "<h1>" + lot.name + "</h1>" + lotCrowded + lastUpdated;
-
+    
+    // Create our marker from geojson so we can specify color
     var geojson = {
         "type": "FeatureCollection",
         "features": [{
@@ -66,12 +75,4 @@ function createMarker(lot) {
             description: popupContent
         }
     }).addTo(map);
-}
-
-function fetchData(successFun, errorFun) {
-    $.ajax({
-        url : apiUrl,
-        success: successFun,
-        error: errorFun
-    });
 }
