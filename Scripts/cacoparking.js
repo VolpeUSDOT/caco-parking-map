@@ -43,7 +43,7 @@ function createMarker(lot) {
             break;
     }
 
-    lastUpdated = "<p class='lastupdated'>Last updated: " + moment(lot.freeSpaceTimeStamp, moment.ISO_8601).format("MMM D, h:m") + "</p>";
+    lastUpdated = "<p class='lastupdated'>Last updated: " + moment(lot.freeSpaceTimeStamp, moment.ISO_8601).format("MMM D, h:mm") + "</p>";
 
     popupContent = "<h1>" + lot.name + "</h1>" + lotCrowded + lastUpdated;
     
