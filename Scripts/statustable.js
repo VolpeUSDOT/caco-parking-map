@@ -18,10 +18,14 @@ function initializeTable(data) {
     var panelStr = "<div class='panel panel-default'><div class='panel-heading npsheader' style='font-weight:bold;'>";
     panelStr += "<img class='npslogo' src='Images/AH_large_flat_4C.gif'/><span class='headertextlarge'>National Park Service</span>";
     panelStr += "<span class='headertext'>Cape Cod National Seashore</span></div>";
-    panelStr += "<table class='table'><tr class='columnheader'><td>Park Name</td><td>Lot Status</td></tr>";
+    panelStr += "<table class='table'><tr class='columnheader'><td>Park Name</td><td>Lot Status</td><td>Additional Information</td></tr>";
     data.forEach(function (lot) {
         panelStr += "<tr><td>" + lot.name + "</td>";
         panelStr += "<td><span id='" + lot.id + "status' class='" + getClassName(lot) + "'>" + lot.freeSpaceStatus + "</span></td>";
+        if (lot.note == null) {
+            lot.note = " ";
+        }
+        panelStr += "<td><span id='" + lot.id + "status'>" + lot.note + "</span></td>";
     });
     panelStr += "</table></div>";
     $("#StatusTable").append(panelStr);

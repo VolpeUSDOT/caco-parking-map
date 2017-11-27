@@ -18,7 +18,7 @@ function showData(data) {
 
 // Add a marker to the map
 function createMarker(lot) {
-    var lotCrowded, lastUpdated, popupContent;
+    var lotCrowded, notes, lastUpdated, popupContent;
     var markerColor = "#A9A9A9";
     lotCrowded = "<p>Parking Available: ";
     switch (lot.freeSpaceStatus) {
@@ -43,9 +43,14 @@ function createMarker(lot) {
             break;
     }
 
-    lastUpdated = "<p class='lastupdated'>Last updated: " + moment(lot.freeSpaceTimeStamp, moment.ISO_8601).format("MMM D, h:mm") + "</p>";
+    notes = "";
+    if(lot.note != null) {
+        notes = "<p>" + lot.note + "</p>";
+    }
 
-    popupContent = "<h1>" + lot.name + "</h1>" + lotCrowded + lastUpdated;
+    lastUpdated = "<p class='lastupdated'>Last updated: " + moment(lot.freeSpaceTimeStamp, moment.ISO_8601).format("MMM D, h:mm A") + "</p>";
+
+    popupContent = "<h1>" + lot.name + "</h1>" + lotCrowded + notes + lastUpdated;
     
     // Create our marker from geojson so we can specify color
     var geojson = {
