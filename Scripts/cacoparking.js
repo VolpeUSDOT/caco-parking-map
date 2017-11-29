@@ -24,6 +24,7 @@ function createMarker(lot) {
     switch (lot.freeSpaceStatus) {
         case "Closed":
             lotCrowded += "<span class='closedstatus'>Lot Closed</span></p>";
+            markerColor = "#e60000";
             break;
         case "Open":
             lotCrowded += "<span class='openstatus'>Yes</span></p>";
@@ -39,7 +40,7 @@ function createMarker(lot) {
             break;
         default:
             lotCrowded += "<span class='closedstatus'>" + lot.freeSpaceStatus + "</span></p>";
-            markerColor = "#e60000";
+            markerColor = "#555555";
             break;
     }
 
@@ -51,7 +52,7 @@ function createMarker(lot) {
     lastUpdated = "<p class='lastupdated'>Last updated: " + moment(lot.freeSpaceTimeStamp, moment.ISO_8601).format("MMM D, h:mm A") + "</p>";
 
     popupContent = "<h1>" + lot.name + "</h1>" + lotCrowded + notes + lastUpdated;
-    
+
     // Create our marker from geojson so we can specify color
     var geojson = {
         "type": "FeatureCollection",
