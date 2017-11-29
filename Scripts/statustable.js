@@ -5,27 +5,33 @@ const refreshTimeMillis = 300000;
 
 function fetchData(successFun, errorFun) {
     $.ajax({
-        url : apiUrl,
+        url: apiUrl,
         success: successFun,
         error: errorFun
     });
 }
 
 function initializeTable(data) {
-    data.sort(function(a, b) {
+    data.sort(function (a, b) {
         return a.name > b.name;
     });
     var panelStr = "<div class='panel panel-default'><div class='panel-heading npsheader' style='font-weight:bold;'>";
     panelStr += "<img class='npslogo' src='Images/AH_large_flat_4C.gif'/><span class='headertextlarge'>National Park Service</span>";
     panelStr += "<span class='headertext'>Cape Cod National Seashore</span></div>";
-    panelStr += "<table class='table'><tr class='columnheader'><td>Park Name</td><td>Lot Status</td><td>Additional Information</td></tr>";
+    panelStr += "<table class='table'><tr class='columnheader'><td>Park Name</td><td>Lot Status</td><td>Parking Availability</td><td>Additional Information</td></tr>";
     data.forEach(function (lot) {
         panelStr += "<tr><td>" + lot.name + "</td>";
-        panelStr += "<td><span id='" + lot.id + "status' class='" + getClassName(lot) + "'>" + lot.freeSpaceStatus + "</span></td>";
+        if (lot.status == "Closed") {
+            panelStr += "<td><span id='" + lot.id + "status' class='no'>" + lot.status + "</span></td>";
+            panelStr += "<td><span id='" + lot.id + "available'> </span></td>";
+        } else {
+            panelStr += "<td><span id='" + lot.id + "status' class='yes'>" + lot.status + "</span></td>";
+            panelStr += "<td><span id='" + lot.id + "available' class='" + getAvailabilityClassName(lot) + "'>" + lot.freeSpaceStatus + "</span></td>";
+        }
         if (lot.note == null) {
             lot.note = " ";
         }
-        panelStr += "<td><span id='" + lot.id + "status'>" + lot.note + "</span></td>";
+        panelStr += "<td><span id='" + lot.id + "note'>" + lot.note + "</span></td>";
     });
     panelStr += "</table></div>";
     $("#StatusTable").append(panelStr);
@@ -34,20 +40,37 @@ function initializeTable(data) {
 }
 
 function refreshData() {
-    fetchData(updateTable, function () { console.log("Fetch data failed") });
+    fetchData(updateTable, function () {
+        console.log("Fetch data failed")
+    });
 }
 
 // Update lot statuses
 function updateTable(data) {
     data.forEach(function (lot) {
         var statusSpan = $("#" + lot.id + "status");
-        statusSpan.text(lot.freeSpaceStatus);
-        statusSpan.attr('class', getClassName(lot));
+        var availableSpan = $("#" + lot.id + "available");
+        var noteSpan = $("#" + lot.id + "note");
+        statusSpan.text(lot.status);
+        if (lot.status == 'Closed') {
+            statusSpan.attr('class', 'closed');
+            availableSpan.text(" ");
+        } else {
+            statusSpan.attr('class', 'yes');
+            availableSpan.text(lot.freeSpaceStatus);
+            availableSpan.attr('class', getAvailabilityClassName(lot));
+        }
+        if (lot.note != null)
+            noteSpan.text(lot.note);
+        else
+            noteSpan.text(" ");
     });
 }
 
 // Determine styling for lot status
-function getClassName(lot) {
+function getAvailabilityClassName(lot) {
+    if (lot.status == "Closed")
+        return "closed";
     switch (lot.freeSpaceStatus) {
         case "Open":
             return "yes";
@@ -55,7 +78,7 @@ function getClassName(lot) {
             return "limited";
         case "Full":
             return "no";
-        case "Closed":          
+        case "Closed":
         default:
             return "closed";
     }

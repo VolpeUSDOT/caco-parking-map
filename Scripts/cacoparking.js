@@ -18,40 +18,47 @@ function showData(data) {
 
 // Add a marker to the map
 function createMarker(lot) {
-    var lotCrowded, notes, lastUpdated, popupContent;
-    var markerColor = "#A9A9A9";
-    lotCrowded = "<p>Parking Available: ";
-    switch (lot.freeSpaceStatus) {
-        case "Closed":
-            lotCrowded += "<span class='closedstatus'>Lot Closed</span></p>";
-            markerColor = "#e60000";
-            break;
-        case "Open":
-            lotCrowded += "<span class='openstatus'>Yes</span></p>";
-            markerColor = "#009933";
-            break;
-        case "Limited":
-            lotCrowded += "<span class='crowdedstatus'>Limited</span></p>";
-            markerColor = "#cc6600";
-            break;
-        case "Full":
-            lotCrowded += "<span class='closedstatus'>None</span></p>";
-            markerColor = "#e60000";
-            break;
-        default:
-            lotCrowded += "<span class='closedstatus'>" + lot.freeSpaceStatus + "</span></p>";
-            markerColor = "#555555";
-            break;
+    var lotStatus, lotCrowded, notes, lastUpdated, popupContent;
+    var markerColor = "#555555";
+    if (lot.status == "Closed") {
+        lotStatus = "<span class='closedstatus'>" + lot.status + "</span><br />";
+        lotCrowded = "";
+        markerColor = "#e60000";
+    } else {
+        lotStatus = "<span class='openstatus'>" + lot.status + "</span><br />";
+        lotCrowded = "<p>Parking Available: ";
+        switch (lot.freeSpaceStatus) {
+            case "Closed":
+                lotCrowded += "<span class='closedstatus'>Lot Closed</span></p>";
+                markerColor = "#e60000";
+                break;
+            case "Open":
+                lotCrowded += "<span class='openstatus'>Yes</span></p>";
+                markerColor = "#009933";
+                break;
+            case "Limited":
+                lotCrowded += "<span class='crowdedstatus'>Limited</span></p>";
+                markerColor = "#cc6600";
+                break;
+            case "Full":
+                lotCrowded += "<span class='closedstatus'>None</span></p>";
+                markerColor = "#e60000";
+                break;
+            default:
+                lotCrowded += "<span class='closedstatus'>" + lot.freeSpaceStatus + "</span></p>";
+                markerColor = "#555555";
+                break;
+        }
     }
 
     notes = "";
-    if(lot.note != null) {
+    if (lot.note != null) {
         notes = "<p>" + lot.note + "</p>";
     }
 
     lastUpdated = "<p class='lastupdated'>Last updated: " + moment(lot.freeSpaceTimeStamp, moment.ISO_8601).format("MMM D, h:mm A") + "</p>";
 
-    popupContent = "<h1>" + lot.name + "</h1>" + lotCrowded + notes + lastUpdated;
+    popupContent = "<h1>" + lot.name + "</h1>" + lotStatus + lotCrowded + notes + lastUpdated;
 
     // Create our marker from geojson so we can specify color
     var geojson = {
