@@ -1,5 +1,9 @@
 const apiUrl = "https://chc78z04rj.execute-api.us-east-1.amazonaws.com/beta/%7Bcaco+%7D";
 
+$(document).ready(function() {
+    fetchData(initializeTable, function () { window.alert("Unable to load parking information.  Please try again."); });
+});
+
 var refreshInterval;
 const refreshTimeMillis = 300000;
 
