@@ -20,9 +20,8 @@ function initializeTable(data) {
         return a.name > b.name;
     });
     var panelStr = "<div class='panel panel-default'><div class='panel-heading npsheader' style='font-weight:bold;'>";
-    panelStr += "<img class='npslogo' src='Images/AH_large_flat_4C.gif'/><span class='headertextlarge'>National Park Service</span>";
-    panelStr += "<span class='headertext'>Cape Cod National Seashore</span></div>";
-    panelStr += "<table class='table'><tr class='columnheader'><td>Park Name</td><td>Lot Status</td><td>Parking Availability</td><td>Additional Information</td></tr>";
+    panelStr += "</div>";
+    panelStr += "<table class='table'><tr class='columnheader'><td>Lot Name</td><td>Lot Status</td><td>Parking Availability</td><td>Additional Information</td></tr>";
     data.forEach(function (lot) {
         panelStr += "<tr><td>" + lot.name + "</td>";
         if (lot.status == "Closed") {
