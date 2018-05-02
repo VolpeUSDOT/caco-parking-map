@@ -72,7 +72,7 @@ function createMarker(lot) {
             "type": "Feature",
             "geometry": {
                 "type": "Point",
-                "coordinates": [lot.longitude, lot.lattitude]
+                "coordinates": [lot.longitude, lot.latitude]
             },
             "properties": {}
         }]
