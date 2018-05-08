@@ -2,7 +2,7 @@ const apiUrl = "https://chc78z04rj.execute-api.us-east-1.amazonaws.com/beta/%7Bc
 var map;
 
 $(document).ready(function() {
-    map = L.npmap.map({ div: 'map', fullscreenControl: false }).setView([41.904432, -69.979073], 11);
+    map = L.npmap.map({ div: 'map', fullscreenControl: false }).setView([41.904432, -69.979073], 10);
     fetchData(showData, function () { window.alert("Unable to load parking information.  Please try again."); });
 });
 
