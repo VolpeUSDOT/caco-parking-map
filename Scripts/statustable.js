@@ -56,7 +56,7 @@ function updateTable(data) {
         var noteSpan = $("#" + lot.id + "note");
         statusSpan.text(lot.status);
         if (lot.status == 'Closed') {
-            statusSpan.attr('class', 'closed');
+            statusSpan.attr('class', 'no');
             availableSpan.text(" ");
         } else {
             statusSpan.attr('class', 'yes');
